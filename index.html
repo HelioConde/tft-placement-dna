@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#090d13">
+  <meta name="description" content="TFT Placement DNA compara seus padrões pessoais de Top 4 e Bottom 4 usando seu histórico recente.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="TFT Placement DNA — o que muda entre seu Top 4 e Bottom 4">
+  <meta property="og:description" content="Veja distribuição de colocações, comps, unidades e augments que aparecem mais nas suas melhores e piores partidas recentes.">
+  <meta property="og:url" content="https://helioconde.github.io/tft-placement-dna/">
+  <link rel="canonical" href="https://helioconde.github.io/tft-placement-dna/">
+  <link rel="alternate" hreflang="pt-BR" href="https://helioconde.github.io/tft-placement-dna/">
+  <link rel="alternate" hreflang="en" href="https://helioconde.github.io/tft-placement-dna/?lang=en">
+  <link rel="alternate" hreflang="x-default" href="https://helioconde.github.io/tft-placement-dna/">
+  <title>TFT Placement DNA — seu perfil por colocação</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="./"><span class="brand-mark">DNA</span><span>Placement <b>DNA</b></span></a>
+    <div class="top-actions">
+      <span class="source-pill" data-i18n="riotData">DADOS RIOT</span>
+      <button id="language-toggle" class="ghost small" type="button">EN</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero shell">
+      <div>
+        <p class="eyebrow" data-i18n="eyebrow">TFT · PERFIL PESSOAL DE COLOCAÇÃO</p>
+        <h1 data-i18n="heroTitle">O que muda quando você <span>termina bem — ou afunda?</span></h1>
+        <p data-i18n="heroText">Compare sua própria amostra de Top 4 e Bottom 4 para encontrar padrões recorrentes de comps, unidades e augments. Correlação pessoal, não tier list.</p>
+
+        <form id="lookup-form" class="lookup">
+          <label><span data-i18n="riotId">Riot ID</span><input id="riot-id" placeholder="AlchemyFlames#BR1" required autocomplete="off"></label>
+          <label><span data-i18n="server">Servidor</span><select id="server"><option value="br1">BR</option><option value="na1">NA</option><option value="euw1">EUW</option><option value="eun1">EUNE</option><option value="kr">KR</option><option value="jp1">JP</option><option value="la1">LAN</option><option value="la2">LAS</option><option value="oc1">OCE</option></select></label>
+          <button class="primary" type="submit" data-i18n="analyze">Ler meu Placement DNA</button>
+        </form>
+        <div id="status" class="status" role="status" aria-live="polite"></div>
+      </div>
+
+      <aside class="hero-card">
+        <p class="eyebrow" data-i18n="howRead">COMO O DNA É LIDO</p>
+        <article><b>1–4</b><div><strong data-i18n="top4Label">Top 4</strong><span data-i18n="top4Help">padrões das melhores partidas</span></div></article>
+        <article><b>5–8</b><div><strong data-i18n="bottom4Label">Bottom 4</strong><span data-i18n="bottom4Help">padrões das partidas que deram errado</span></div></article>
+        <article><b>Δ</b><div><strong data-i18n="difference">Diferença</strong><span data-i18n="differenceHelp">o que aparece mais em um grupo</span></div></article>
+      </aside>
+    </section>
+
+    <section id="loading" class="loading shell" hidden><div class="spinner"></div><div><strong data-i18n="loadingTitle">Consultando seu histórico TFT…</strong><span data-i18n="loadingText">Organizando colocações, comps, unidades e augments.</span></div></section>
+
+    <section id="result" class="result shell" hidden>
+      <div class="result-head">
+        <div><p class="eyebrow" data-i18n="analysis">PLACEMENT DNA</p><h2 id="player-name">—</h2><p id="sample-note" class="muted"></p></div>
+        <div class="period-tabs"><button type="button" class="period" data-period="week">7D</button><button type="button" class="period active" data-period="month">30D</button><button type="button" class="period" data-period="set" data-i18n="currentSet">Set atual</button></div>
+      </div>
+
+      <section class="metrics">
+        <article><span data-i18n="games">Partidas</span><strong id="metric-games">—</strong><small data-i18n="inSample">na amostra</small></article>
+        <article><span data-i18n="average">Média</span><strong id="metric-avg">—</strong><small data-i18n="placement">colocação</small></article>
+        <article><span data-i18n="top4">Top 4</span><strong id="metric-top4">—</strong><small id="metric-top4-note">—</small></article>
+        <article><span data-i18n="wins">Vitórias</span><strong id="metric-wins">—</strong><small id="metric-wins-note">—</small></article>
+      </section>
+
+      <section class="panel placement-panel">
+        <div class="panel-head"><div><p class="eyebrow" data-i18n="distributionEyebrow">DISTRIBUIÇÃO</p><h3 data-i18n="distributionTitle">Suas colocações no período</h3></div></div>
+        <div id="placement-chart" class="placement-chart"></div>
+      </section>
+
+      <section class="dna-grid">
+        <article class="panel band-card top-band">
+          <div class="panel-head"><div><p class="eyebrow">TOP 4</p><h3 data-i18n="topPatterns">Quando você termina no Top 4</h3></div><strong id="top-games">—</strong></div>
+          <div class="band-metrics"><span><b id="top-avg">—</b><small data-i18n="average">Média</small></span><span><b id="top-level">—</b><small data-i18n="level">Nível médio</small></span><span><b id="top-gold">—</b><small data-i18n="gold">Ouro final médio</small></span></div>
+          <div class="pattern-group"><span data-i18n="comps">Comps</span><div id="top-comps"></div></div>
+          <div class="pattern-group"><span data-i18n="units">Unidades</span><div id="top-units"></div></div>
+          <div class="pattern-group"><span data-i18n="augments">Augments</span><div id="top-augments"></div></div>
+        </article>
+
+        <article class="panel band-card bottom-band">
+          <div class="panel-head"><div><p class="eyebrow">BOTTOM 4</p><h3 data-i18n="bottomPatterns">Quando você termina no Bottom 4</h3></div><strong id="bottom-games">—</strong></div>
+          <div class="band-metrics"><span><b id="bottom-avg">—</b><small data-i18n="average">Média</small></span><span><b id="bottom-level">—</b><small data-i18n="level">Nível médio</small></span><span><b id="bottom-gold">—</b><small data-i18n="gold">Ouro final médio</small></span></div>
+          <div class="pattern-group"><span data-i18n="comps">Comps</span><div id="bottom-comps"></div></div>
+          <div class="pattern-group"><span data-i18n="units">Unidades</span><div id="bottom-units"></div></div>
+          <div class="pattern-group"><span data-i18n="augments">Augments</span><div id="bottom-augments"></div></div>
+        </article>
+      </section>
+
+      <section class="panel difference-panel">
+        <div class="panel-head"><div><p class="eyebrow" data-i18n="differenceEyebrow">DIFERENÇAS DA SUA AMOSTRA</p><h3 data-i18n="differenceTitle">O que aparece mais no Top 4 do que no Bottom 4?</h3></div><span id="confidence-badge" class="confidence-badge">—</span></div>
+        <div id="difference-list" class="difference-list"></div>
+        <p class="method-note" data-i18n="causality">Isto descreve frequência na sua amostra. Não prova que uma comp, unidade ou augment causou a colocação.</p>
+      </section>
+
+      <section class="panel recent-panel">
+        <div class="panel-head"><div><p class="eyebrow" data-i18n="recentEyebrow">PARTIDAS</p><h3 data-i18n="recentTitle">Histórico usado nesta leitura</h3></div></div>
+        <div id="recent-list" class="recent-list"></div>
+      </section>
+
+      <aside class="ad-slot"><span data-i18n="ad">PUBLICIDADE</span><small data-i18n="adNote">espaço reservado · fora da análise principal</small></aside>
+    </section>
+  </main>
+
+  <footer class="footer shell">
+    <div><strong>TFT Placement DNA</strong><span data-i18n="disclaimer">Produto independente. Teamfight Tactics e Riot Games são marcas da Riot Games, Inc.</span></div>
+    <nav><a href="sobre.html" data-i18n="about">Sobre</a><a href="privacidade.html" data-i18n="privacy">Privacidade</a><a href="termos.html" data-i18n="terms">Termos</a></nav>
+  </footer>
+
+  <script src="backend-config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
