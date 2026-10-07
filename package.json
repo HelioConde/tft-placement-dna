@@ -1,0 +1,10 @@
+{
+  "name":"tft-placement-dna",
+  "private":true,
+  "version":"1.0.0",
+  "scripts":{
+    "check":"node --check app.js && node --check backend-config.js && node --check static-page.js && node --check live-update.js && node scripts/qa.mjs",
+    "test:e2e":"playwright test"
+  },
+  "devDependencies":{"@playwright/test":"^1.55.0"}
+}
