@@ -1,0 +1,36 @@
+name: Live Riot Smoke
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 11 * * 2"
+
+permissions:
+  contents: read
+
+jobs:
+  live-riot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install
+      - run: npx playwright install --with-deps chromium
+      - name: Smoke production with real Riot data
+        env:
+          LIVE_RIOT_SMOKE: "1"
+          PLAYWRIGHT_BASE_URL: https://helioconde.github.io/tft-placement-dna/
+        run: npx playwright test tests/live-riot.spec.js --project=desktop-chromium
+      - name: Upload diagnostics on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tft-placement-dna-live-smoke
+          path: |
+            test-results/
+            playwright-report/
+          if-no-files-found: ignore
+          retention-days: 7
