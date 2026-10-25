@@ -1,94 +1,48 @@
-# TFT Placement DNA — Padrões das suas colocações
+<div align="center">
+  <h1>🧬 TFT Placement DNA</h1>
+  <p><strong>Compare seus Top 4 e Bottom 4 para descobrir padrões recorrentes nas partidas recentes de Teamfight Tactics.</strong></p>
+  <p><img alt="Status" src="https://img.shields.io/badge/status-MVP%20em%20valida%C3%A7%C3%A3o-64748b"></p>
+</div>
 
-**Compare seus resultados Top 4 e Bottom 4 para encontrar padrões recorrentes no seu histórico de TFT.**
+## A ideia
 
-**O painel reúne:** distribuição de colocações, unidades, composições, augments e diferenças de frequência com indicação de tamanho/confiança da amostra.
+**Placement DNA** divide as partidas recentes de TFT em dois grupos: **Top 4 (1º–4º)** e **Bottom 4 (5º–8º)**. Em seguida compara a frequência de unidades, composições e augments, procurando diferenças que possam ajudar a decidir o que revisar.
 
-> Correlação não significa causalidade. O produto auxilia revisão de partidas; não prevê colocação futura ou comprova que um elemento venceu a partida.
+É uma análise **pessoal da amostra**, não um sistema de previsão ou uma tier list global.
 
----
+## Métricas e sinais
 
-Perfil pessoal de colocação em Teamfight Tactics baseado no histórico recente do próprio jogador.
+| Comparação | Leitura |
+| --- | --- |
+| Top 4 x Bottom 4 | Distribuição de colocações da amostra |
+| Traits e composições | Presença em cada grupo |
+| Unidades | Frequência por faixa de colocação |
+| Augments | Diferença entre grupos |
+| Relevância | Diferença em pontos percentuais |
+| Tamanho da amostra | Quantidade de ocorrências e indicação de confiança |
 
-## Estado atual
+O MVP filtra sinais fracos: o elemento precisa aparecer em pelo menos duas partidas e mostrar uma diferença relevante. Mesmo assim, **a amostra pode ser insuficiente para conclusões generalizáveis**.
 
-> **MVP funcional implementado em 07/10/2026.** O produto entra agora em validação real; novas features ficam congeladas até o gate fechar.
+## Consultar e interpretar
 
-## Proposta
+1. Pesquise seu Riot ID e região.
+2. Escolha 7 dias, 30 dias ou Set.
+3. Veja resultados, distribuição e elementos recorrentes.
+4. Compare os grupos e examine a quantidade de partidas usada.
 
-O Placement DNA divide sua amostra em:
+Os dados vêm da integração gamer `riot-legacy-tft-profile`; podem estar incompletos por disponibilidade, período ou rate limit. O frontend não deve conter a Riot API key.
 
-- **Top 4**: colocações 1–4;
-- **Bottom 4**: colocações 5–8.
+> **Correlação não é causalidade:** patch, lobby, itens, posicionamento, economia e ações durante o jogo afetam o resultado.
 
-Depois compara frequência de:
+## Executar localmente
 
-- comps/traits;
-- unidades;
-- augments.
+```bash
+git clone https://github.com/HelioConde/tft-placement-dna.git
+cd tft-placement-dna
+python -m http.server 8000
+```
 
-Cada diferença mostra:
-
-- taxa no Top 4;
-- taxa no Bottom 4;
-- diferença em pontos percentuais;
-- direção do padrão;
-- confiança da amostra.
-
-## Regra de interpretação
-
-**Correlação pessoal não é causalidade.**
-
-Se um elemento aparece mais no Top 4, isso não prova que ele causou uma colocação melhor. Patch, lobby, itens, posicionamento, economia, estágio e decisões alteram o resultado.
-
-O MVP só mostra diferenças recorrentes quando o elemento aparece em pelo menos duas partidas e a diferença absoluta é relevante.
-
-## Métricas
-
-- partidas;
-- colocação média;
-- Top 4%;
-- vitórias;
-- distribuição 1º–8º;
-- nível médio quando disponível;
-- ouro final médio quando disponível;
-- comps/unidades/augments por faixa;
-- histórico usado na leitura.
-
-## Períodos
-
-- 7 dias;
-- 30 dias;
-- Set atual.
-
-## Backend
-
-`riot-legacy-tft-profile` no backend gamer.
-
-O frontend não possui chave Riot.
-
-## Idiomas
-
-- PT-BR principal;
-- EN obrigatório;
-- deep link preserva idioma, Riot ID, servidor e período.
-
-## QA
-
-Automação cobre:
-
-- payload TFT controlado;
-- Top 4 vs Bottom 4;
-- direção positiva/negativa;
-- diferença percentual;
-- confiança da amostra;
-- distribuição 1º–8º;
-- 7D/30D/Set;
-- 404/rate limit/validação;
-- PT-BR/EN;
-- deep link;
-- desktop/mobile;
-- Live Riot Smoke com `AlchemyFlames#BR1`.
+Abra `http://localhost:8000`. Para checagens:
 
 ```bash
 npm install
@@ -96,33 +50,10 @@ npm run check
 npm run test:e2e
 ```
 
-## Gate antes de V2
+## Situação e próximos passos
 
-- [x] MVP navegável;
-- [x] Riot backend;
-- [x] análise Top 4/Bottom 4;
-- [x] confiança da amostra;
-- [x] PT-BR/EN;
-- [x] QA/E2E;
-- [x] Pages preparado;
-- [x] Live Riot Smoke;
-- [ ] confirmar QA/Pages verdes;
-- [ ] confirmar payload real com AlchemyFlames#BR1;
-- [ ] validar 3+ Riot IDs/regiões;
-- [ ] revisar contas com histórico pequeno;
-- [ ] revisar casos sem traits/augments/level/gold;
-- [ ] corrigir somente P0/P1.
+**MVP implementado, em validação com usuários e dados reais adicionais.** Conferir contas com pouco histórico, ausência de traits/augments, resultados mobile e disponibilidade do backend antes de anunciar lançamento amplo.
 
-## V2 — depois da validação
+[**Documentação técnica e QA anterior**](docs/README_HISTORY_2026-10-25.md) · [**Projetos do Ideias IA Lab**](https://github.com/HelioConde/ideias-ia-lab)
 
-- evolução por patch;
-- comparação entre períodos;
-- separar 1º / 2–4 / 5–6 / 7–8;
-- padrões de economia/nível quando a telemetria permitir;
-- card compartilhável;
-- notas pessoais;
-- comparação com o próprio histórico anterior.
-
-## Compliance
-
-Produto independente e não endossado pela Riot Games. Teamfight Tactics e Riot Games são marcas de seus respectivos titulares.
+Não oficial, independente da Riot Games. Criado por [Hélio Conde](https://github.com/HelioConde).
