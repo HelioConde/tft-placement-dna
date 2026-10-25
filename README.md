@@ -1,4 +1,12 @@
-# TFT Placement DNA
+# TFT Placement DNA — Padrões das suas colocações
+
+**Compare seus resultados Top 4 e Bottom 4 para encontrar padrões recorrentes no seu histórico de TFT.**
+
+**O painel reúne:** distribuição de colocações, unidades, composições, augments e diferenças de frequência com indicação de tamanho/confiança da amostra.
+
+> Correlação não significa causalidade. O produto auxilia revisão de partidas; não prevê colocação futura ou comprova que um elemento venceu a partida.
+
+---
 
 Perfil pessoal de colocação em Teamfight Tactics baseado no histórico recente do próprio jogador.
 
